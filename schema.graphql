@@ -1,24 +1,5 @@
-type Member @entity {
+type TokenHolder @entity {
   id: ID!
-  address: String!
-  tokens: BigInt!
-  delegatedTo: Member
-  delegatedVotes: BigInt!
-}
-
-type Proposal @entity {
-  id: ID!
-  proposer: Member!
-  description: String!
-  startTime: BigInt!
-  endTime: BigInt!
-  yesVotes: BigInt!
-  noVotes: BigInt!
-  status: ProposalStatus!
-}
-
-enum ProposalStatus {
-  Active
-  Passed
-  Rejected
+  address: Bytes!
+  balance: BigInt!
 }

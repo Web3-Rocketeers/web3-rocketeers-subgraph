@@ -1,27 +1,30 @@
-specVersion: 0.0.2
-description: Gravatar for Ethereum
-repository: https://github.com/graphprotocol/example-subgraph
+specVersion: 0.0.4
+description: Web3 Rocketeers Gaming DAO
+repository: https://github.com/fonckchain/web3-rocketeers-subgraph
 schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum/contract
-    name: Gravity
+    name: Web3Rocketeers
     network: mainnet
     source:
-      address: '0x2E645469f354BB4F5c8a05B3b30A929361cf77eC'
-      abi: Gravity
+      address: "0xaf979bD5331F887A273D2b6E57aDbE7abF8fBeca"
+      abi: Web3Rocketeers
+      startBlock: 16681389
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
-        - Gravatar
+        - Member
+        - Proposal
       abis:
-        - name: Gravity
-          file: ./abis/Gravity.json
+        - name: Web3Rocketeers
+          file: ./abis/Web3Rocketeers.json
       eventHandlers:
-        - event: NewGravatar(uint256,address,string,string)
-          handler: handleNewGravatar
-        - event: UpdatedGravatar(uint256,address,string,string)
-          handler: handleUpdatedGravatar
-      file: ./src/mapping.ts
+        - event: MemberRegistered(address,uint256)
+          handler: handleMemberRegistered
+        - event: ProposalCreated(uint256,address,string,uint256,uint256)
+          handler: handleProposalCreated
+        # Add additional event handlers as needed
+      file: ./src/mappings/Web3Rocketeers.ts

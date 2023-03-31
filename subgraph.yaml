@@ -21,6 +21,6 @@ dataSources:
         - name: Web3Rocketeers
           file: ./abis/Web3Rocketeers.json
       eventHandlers:
-        - event: Transfer(address,address,uint256)
-          handler: handleTransfer
+        - event: TransferSingle(indexed address,indexed address,indexed address,uint256,uint256)
+          handler: handleTransferSingle
       file: ./src/mappings/GovernanceToken.ts

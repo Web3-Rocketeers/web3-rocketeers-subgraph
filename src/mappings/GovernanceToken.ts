@@ -1,5 +1,7 @@
-import { TransferSingle } from "../generated/GovernanceToken/Web3Rocketeers";
-import { TokenHolder } from "../generated/schema";
+import { BigInt, store } from "@graphprotocol/graph-ts";
+
+import { TransferSingle } from "../../generated/GovernanceToken/Web3Rocketeers";
+import { TokenHolder } from "../../generated/schema";
 
 // Update GOVERNANCE_TOKEN_ID to match the ID of your governance token
 const GOVERNANCE_TOKEN_ID = "256";

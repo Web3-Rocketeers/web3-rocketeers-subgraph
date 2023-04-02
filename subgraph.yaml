@@ -8,7 +8,7 @@ dataSources:
     name: Web3-Rocketeers
     network: mainnet
     source:
-      address: "0xaf979bD5331F887A273D2b6E57aDbE7abF8fBeca" # replace with your governance token contract address
+      address: "0xaf979bD5331F887A273D2b6E57aDbE7abF8fBeca"
       abi: Web3Rocketeers
       startBlock: 16681389
     mapping:
@@ -16,7 +16,7 @@ dataSources:
       apiVersion: 0.0.6
       language: wasm/assemblyscript
       entities:
-        - TokenHolder
+        - Balance
       abis:
         - name: Web3Rocketeers
           file: ./abis/Web3Rocketeers.json

@@ -1,5 +1,6 @@
-type TokenHolder @entity {
+type Balance @entity {
   id: ID!
-  address: Bytes!
-  balance: BigInt!
+  account: Bytes!
+  tokenId: BigInt! // Store the token ID
+  value: BigInt!
 }

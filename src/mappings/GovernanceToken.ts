@@ -1,35 +1,37 @@
-import { BigInt, store } from "@graphprotocol/graph-ts";
+import { Web3Provider } from '@ethersproject/providers';
+import { Contract } from '@ethersproject/contracts';
+import { abi } from './Web3Rocketeers.json';
 
-import { TransferSingle } from "../../generated/GovernanceToken/Web3Rocketeers";
-import { TokenHolder } from "../../generated/schema";
+export class GovernanceToken {
+  private contract: Contract;
 
-const GOVERNANCE_TOKEN_ID = BigInt.fromI32(256);
+  constructor(provider: Web3Provider, contractAddress: string) {
+    this.contract = new Contract(contractAddress, abi, provider);
+  }
 
-export function handleTransferSingle(event: TransferSingle): void {
-  let tokenId = event.params.id;
+  async getTotalSupply(): Promise<number> {
+    // Implement this method based on the contract's functionality
+    throw new Error('Not implemented');
+  }
 
-  // Only track transfers for the governance token
-  if (tokenId.equals(GOVERNANCE_TOKEN_ID)) {
-    let from = event.params.from.toHex();
-    let to = event.params.to.toHex();
-    let value = event.params.value;
+  async getBalanceOf(address: string): Promise<number> {
+    // For ERC-1155, balanceOf method takes two arguments: account and id
+    // Use the specific token ID you mentioned (256)
+    const tokenId = 256;
+    const balance = await this.contract.balanceOf(address, tokenId);
+    return balance.toNumber();
+  }
 
-    // Update the balance for the 'from' TokenHolder
-    let fromTokenHolder = TokenHolder.load(from);
-    if (fromTokenHolder == null) {
-      fromTokenHolder = new TokenHolder(from);
-      fromTokenHolder.balance = BigInt.fromI32(0);
-    }
-    fromTokenHolder.balance = fromTokenHolder.balance.minus(value);
-    fromTokenHolder.save();
+  onTransfer(listener: (from: string, to: string, value: number) => void): void {
+    this.contract.on('TransferSingle', (operator, from, to, id, value) => {
+      // For ERC-1155, check if the transferred token's id matches the governance token's id (256)
+      if (id === 256) {
+        listener(from, to, value.toNumber());
+      }
+    });
+  }
 
-    // Update the balance for the 'to' TokenHolder
-    let toTokenHolder = TokenHolder.load(to);
-    if (toTokenHolder == null) {
-      toTokenHolder = new TokenHolder(to);
-      toTokenHolder.balance = BigInt.fromI32(0);
-    }
-    toTokenHolder.balance = toTokenHolder.balance.plus(value);
-    toTokenHolder.save();
+  offTransfer(listener: () => void): void {
+    this.contract.off('TransferSingle', listener);
   }
 }

@@ -5,7 +5,7 @@ schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum/contract
-    name: GovernanceToken
+    name: Web3-Rocketeers
     network: mainnet
     source:
       address: "0xaf979bD5331F887A273D2b6E57aDbE7abF8fBeca" # replace with your governance token contract address

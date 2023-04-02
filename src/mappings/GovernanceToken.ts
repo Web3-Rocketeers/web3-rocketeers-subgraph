@@ -1,37 +1,33 @@
-import { Web3Provider } from '@ethersproject/providers';
-import { Contract } from '@ethersproject/contracts';
-import { abi } from './Web3Rocketeers.json';
+import { TransferSingle } from "../generated/Web3-Rocketeers/Web3Rocketeers";
+import { Balance } from "../generated/schema";
 
-export class GovernanceToken {
-  private contract: Contract;
+export function handleTransferSingle(event: TransferSingle): void {
+  let tokenId = event.params.id;
+  let from = event.params.from;
+  let to = event.params.to;
+  let value = event.params.value;
 
-  constructor(provider: Web3Provider, contractAddress: string) {
-    this.contract = new Contract(contractAddress, abi, provider);
-  }
+  if (tokenId == 256) { // Check if the transferred token's ID matches the governance token's ID (256)
+    let fromBalanceId = from.toHex() + "-" + tokenId.toString();
+    let fromBalance = Balance.load(fromBalanceId);
+    if (fromBalance == null) {
+      fromBalance = new Balance(fromBalanceId);
+      fromBalance.account = from;
+      fromBalance.tokenId = tokenId; // Set the tokenId
+      fromBalance.value = BigInt.fromI32(0);
+    }
+    fromBalance.value = fromBalance.value.minus(value);
+    fromBalance.save();
 
-  async getTotalSupply(): Promise<number> {
-    // Implement this method based on the contract's functionality
-    throw new Error('Not implemented');
-  }
-
-  async getBalanceOf(address: string): Promise<number> {
-    // For ERC-1155, balanceOf method takes two arguments: account and id
-    // Use the specific token ID you mentioned (256)
-    const tokenId = 256;
-    const balance = await this.contract.balanceOf(address, tokenId);
-    return balance.toNumber();
-  }
-
-  onTransfer(listener: (from: string, to: string, value: number) => void): void {
-    this.contract.on('TransferSingle', (operator, from, to, id, value) => {
-      // For ERC-1155, check if the transferred token's id matches the governance token's id (256)
-      if (id === 256) {
-        listener(from, to, value.toNumber());
-      }
-    });
-  }
-
-  offTransfer(listener: () => void): void {
-    this.contract.off('TransferSingle', listener);
+    let toBalanceId = to.toHex() + "-" + tokenId.toString();
+    let toBalance = Balance.load(toBalanceId);
+    if (toBalance == null) {
+      toBalance = new Balance(toBalanceId);
+      toBalance.account = to;
+      toBalance.tokenId = tokenId; // Set the tokenId
+      toBalance.value = BigInt.fromI32(0);
+    }
+    toBalance.value = toBalance.value.plus(value);
+    toBalance.save();
   }
 }

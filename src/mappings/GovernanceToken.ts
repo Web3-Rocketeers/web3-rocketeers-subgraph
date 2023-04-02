@@ -3,14 +3,13 @@ import { BigInt, store } from "@graphprotocol/graph-ts";
 import { TransferSingle } from "../../generated/GovernanceToken/Web3Rocketeers";
 import { TokenHolder } from "../../generated/schema";
 
-// Update GOVERNANCE_TOKEN_ID to match the ID of your governance token
-const GOVERNANCE_TOKEN_ID = "256";
+const GOVERNANCE_TOKEN_ID = BigInt.fromI32(256);
 
 export function handleTransferSingle(event: TransferSingle): void {
-  let tokenId = event.params.id.toHex();
+  let tokenId = event.params.id;
 
   // Only track transfers for the governance token
-  if (tokenId === GOVERNANCE_TOKEN_ID) {
+  if (tokenId.equals(GOVERNANCE_TOKEN_ID)) {
     let from = event.params.from.toHex();
     let to = event.params.to.toHex();
     let value = event.params.value;

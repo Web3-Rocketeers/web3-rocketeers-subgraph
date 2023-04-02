@@ -1,6 +1,6 @@
 type Balance @entity {
   id: ID!
   account: Bytes!
-  tokenId: BigInt! // Store the token ID
+  tokenId: BigInt!
   value: BigInt!
 }

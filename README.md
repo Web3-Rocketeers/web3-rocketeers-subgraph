@@ -1,3 +1,3 @@
-# Example Subgraph
+Hello!
 
-An example to help you get started with The Graph. For more information see the docs on https://thegraph.com/docs/.
+This repo is for leverating the Graph blockchain protocol to index relevant data to our gaming dao governance.
